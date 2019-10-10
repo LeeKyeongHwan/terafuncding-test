@@ -13,4 +13,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.product {
+  margin-top: 24px;
+  width: 350px;
+  background-color: pink;
+}
 </style>
