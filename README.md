@@ -1,4 +1,4 @@
-# terafuncding-test
+# terafunding-test
 
 ## Project setup
 ```
