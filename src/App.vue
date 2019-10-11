@@ -7,4 +7,5 @@
 <style lang="scss">
 @import '@/assets/scss/reset.scss';
 @import '@/assets/scss/common.scss';
+@import '@/assets/scss/btn.scss';
 </style>

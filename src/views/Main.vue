@@ -5,33 +5,33 @@
         <div class="filter">
           <div class="filter__title">상품유형</div>
           <div class="checkbox">
-            <input type="checkbox" id="typedStatus_all">
-            <label for="typedStatus_all">전체</label>
-          </div>
-          <div class="vertical-bar"></div>
-          <div class="checkbox">
-            <input type="checkbox" id="typedStatus_1" value="건축자금">
-            <label for="typedStatus_1">건축자금</label>
-          </div>
-          <div class="checkbox">
-            <input type="checkbox" id="typedStatus_2" value="부동산담보">
-            <label for="typedStatus_2">부동산담보</label>
-          </div>
-        </div>
-        <div class="filter">
-          <div class="filter__title">채권상태</div>
-          <div class="checkbox">
             <input type="checkbox" id="contractType_all">
             <label for="contractType_all">전체</label>
           </div>
           <div class="vertical-bar"></div>
           <div class="checkbox">
-            <input type="checkbox" id="contractType_1" value="대기중">
-            <label for="contractType_1">대기중</label>
+            <input type="checkbox" id="contractType_1" value="건축자금">
+            <label for="contractType_1">건축자금</label>
           </div>
           <div class="checkbox">
-            <input type="checkbox" id="contractType_2" value="모집중">
-            <label for="contractType_2">모집중</label>
+            <input type="checkbox" id="contractType_2" value="부동산담보">
+            <label for="contractType_2">부동산담보</label>
+          </div>
+        </div>
+        <div class="filter">
+          <div class="filter__title">채권상태</div>
+          <div class="checkbox">
+            <input type="checkbox" id="typedStatus_all">
+            <label for="typedStatus_all">전체</label>
+          </div>
+          <div class="vertical-bar"></div>
+          <div class="checkbox">
+            <input type="checkbox" id="typedStatus_1" value="대기중">
+            <label for="typedStatus_1">대기중</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="typedStatus_2" value="모집중">
+            <label for="typedStatus_2">모집중</label>
           </div>
         </div>
       </div>
@@ -39,10 +39,13 @@
 
     <section class="product-wrap">
       <div class="container">
-        <div class="product-result">총 <em>100</em>건의 상품이 검색되었습니다.</div>
+        <div class="product-result">총 <em>{{ search.total }}</em>건의 상품이 검색되었습니다.</div>
         <ul class="product-list">
-          <li is="Product" v-for="(item, index) in 10" :key="index"></li>
+          <li is="Product" v-for="(item, index) in 5" :key="index"></li>
         </ul>
+        <div class="product-btn-more">
+          <button type="button" class="btn btn__more">더보기 ({{ search.page + 1 }}/{{ search.totalPages }})</button>
+        </div>
       </div>
     </section>
   </div>
@@ -57,7 +60,36 @@ export default {
     Product
   },
   data () {
-    return {}
+    return {
+      products: {
+        total: 0,
+        error: false,
+        list: []
+      },
+      filters: {},
+      search: {
+        total: 0,
+        page: 0,
+        totalPages: 0,
+        count: 5,
+        list: []
+      }
+    }
+  },
+  methods: {
+    getProducts () {
+      this.$axios.get('/data.json').then(result => {
+        // origin products data init
+        this.products = result.data
+        // basic search init
+        Object.assign(this.search, this.products)
+        // basic pagination init
+        this.search.totalPages = Math.ceil(this.search.total / this.search.count)
+      })
+    }
+  },
+  created () {
+    this.getProducts()
   }
 }
 </script>
@@ -103,6 +135,14 @@ export default {
 .product-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  margin: 0 0 60px -12.5px;
+  width: calc(100% + 25px);
+}
+
+.product-btn-more {
+  display: flex;
+  justify-content: center;
+
+  .btn__more { width: 350px; }
 }
 </style>

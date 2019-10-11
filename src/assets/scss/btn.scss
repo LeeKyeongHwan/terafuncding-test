@@ -1,0 +1,32 @@
+@charset 'utf-8';
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 155px;
+  height: 40px;
+  border-radius: 4px;
+  color: #666;
+  background-color: #fff;
+  border: 1px solid #ccc;
+
+  &:disabled,
+  &.disabled {
+    border: 0;
+    background-color: #a8a8a8;
+    color: #fff;
+    cursor: not-allowed;
+    
+  }
+}
+
+.btn--primary {
+  border: 0;
+  background-color: $primary;
+  color: #fff;
+}
+.btn--primary-outline {
+  border: 1px solid $primary;
+  color: $primary;
+}
