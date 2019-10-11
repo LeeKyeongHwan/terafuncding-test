@@ -33,8 +33,7 @@
 <script>
 export default {
   name: 'Product',
-  props: {
-  }
+  props: {}
 }
 </script>
 
