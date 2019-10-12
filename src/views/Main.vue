@@ -82,10 +82,15 @@ export default {
       products: []
     }
   },
+  computed: {
+    jsonURL () {
+      return process.env.NODE_ENV === 'production' ? '/terafunding-test/data.json' : '/data.json'
+    }
+  },
   methods: {
     getOriginProducts () {
       return new Promise(resolve => {
-        this.$axios.get('/data.json').then(result => {
+        this.$axios.get(this.jsonURL).then(result => {
           // origin products data init
           this.originProducts = result.data
           return resolve()
