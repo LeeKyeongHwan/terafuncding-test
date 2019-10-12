@@ -70,7 +70,7 @@ export default {
   margin: 24px 12px 0 12px;
   width: 350px;
   height: 414px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 2px 1px -1px rgba(0,0,0,.12), 0 1px 1px 0 rgba(0,0,0,.14);
 }
 .product__image {
   height: 195px;
@@ -89,7 +89,7 @@ export default {
   .progress__bar {
     width: 50%;
     height: 100%;
-    background: linear-gradient(to right, #5ac3fc 0%,#3d6afe 100%);
+    background: linear-gradient(to right, #5ac3fc 0%,$primary 100%);
   }
   .progress__value {
     position: absolute;

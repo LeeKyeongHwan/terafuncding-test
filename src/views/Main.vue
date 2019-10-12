@@ -2,38 +2,22 @@
   <div class="main">
     <section class="filter-wrap">
       <div class="container">
-        <div class="filter">
-          <div class="filter__title">상품유형</div>
-          <div class="checkbox">
-            <input type="checkbox" id="contractType_all" v-model="filters.contractTypeAll" @change="filterContractTypeAll">
-            <label for="contractType_all">전체</label>
-          </div>
-          <div class="vertical-bar"></div>
-          <div class="checkbox">
-            <input type="checkbox" id="contractType_1" value="건축자금" v-model="filters.contractType" @change="filterContractType">
-            <label for="contractType_1">건축자금</label>
-          </div>
-          <div class="checkbox">
-            <input type="checkbox" id="contractType_2" value="부동산담보" v-model="filters.contractType" @change="filterContractType">
-            <label for="contractType_2">부동산담보</label>
-          </div>
-        </div>
-        <div class="filter">
-          <div class="filter__title">채권상태</div>
-          <div class="checkbox">
-            <input type="checkbox" id="typedStatus_all" v-model="filters.typedStatusAll" @change="filterTypedStatusAll">
-            <label for="typedStatus_all">전체</label>
-          </div>
-          <div class="vertical-bar"></div>
-          <div class="checkbox">
-            <input type="checkbox" id="typedStatus_1" value="대기중" v-model="filters.typedStatus" @change="filterTypedStatus">
-            <label for="typedStatus_1">대기중</label>
-          </div>
-          <div class="checkbox">
-            <input type="checkbox" id="typedStatus_2" value="모집중" v-model="filters.typedStatus" @change="filterTypedStatus">
-            <label for="typedStatus_2">모집중</label>
-          </div>
-        </div>
+        <search-filter
+          id="contractType"
+          :categories="filterCategories.contractType"
+          :value.sync="filters.contractType"
+          @searchFilter="getSearch"
+        >
+          상품유형
+        </search-filter>
+        <search-filter
+          id="typedStatus"
+          :categories="filterCategories.typedStatus"
+          :value.sync="filters.typedStatus"
+          @searchFilter="getSearch"
+        >
+          채권상태
+        </search-filter>
       </div>
     </section>
 
@@ -46,11 +30,13 @@
 </template>
 
 <script>
+import SearchFilter from '@/components/SearchFilter'
 import ProductList from '@/components/ProductList'
 
 export default {
   name: 'Main',
   components: {
+    SearchFilter,
     ProductList
   },
   data () {
@@ -60,10 +46,12 @@ export default {
         error: false,
         list: []
       },
-      filters: {
-        contractTypeAll: true,
+      filterCategories: {
         contractType: ['건축자금', '부동산담보'],
-        typedStatusAll: true,
+        typedStatus: ['대기중', '모집중']
+      },
+      filters: {
+        contractType: ['건축자금', '부동산담보'],
         typedStatus: ['대기중', '모집중']
       },
       search: {
@@ -136,28 +124,6 @@ export default {
     },
     getProducts () {
       this.setPagination()
-    },
-    filterContractTypeAll () {
-      const contractTypeAll = this.filters.contractTypeAll
-      this.filters.contractType = contractTypeAll ? ['건축자금', '부동산담보'] : []
-
-      this.getSearch()
-    },
-    filterContractType () {
-      this.filters.contractTypeAll = this.filters.contractType.length === 2
-
-      this.getSearch()
-    },
-    filterTypedStatusAll () {
-      const typedStatusAll = this.filters.typedStatusAll
-      this.filters.typedStatus = typedStatusAll ? ['대기중', '모집중'] : []
-
-      this.getSearch()
-    },
-    filterTypedStatus () {
-      this.filters.typedStatusAll = this.filters.typedStatus.length === 2
-
-      this.getSearch()
     }
   },
   created () {
@@ -172,30 +138,6 @@ export default {
   align-items: center;
   height: 200px;
   background-color: #f7f7f7;
-
-  .filter {
-    display: flex;
-    align-items: center;
-    padding: 0 40px;
-    height: 48px;
-    background-color: #fff;
-    border-bottom: 1px solid #e1e1e1;
-
-    .filter__title {
-      margin-right: 68px;
-      font-weight: 700;
-    }
-    .vertical-bar {
-      margin: 0 8px;
-      width: 1px;
-      height: 24px;
-      background-color: #e1e1e1;
-    }
-    .checkbox {
-      margin: 0 16px;
-      input[type='checkbox'] { margin: 0 4px 0 0; }
-    }
-  }
 }
 
 .product-wrap { padding: 60px 0; }
