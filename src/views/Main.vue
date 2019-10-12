@@ -39,38 +39,32 @@
 
     <section class="product-wrap">
       <div class="container">
-        <div class="product-result">총 <em>{{ search.total }}</em>건의 상품이 검색되었습니다.</div>
-        <ul class="product-list">
-          <li is="Product" v-for="(item, index) in products" :key="index" :product="item"></li>
-        </ul>
-        <div class="product-btn-more">
-          <button type="button" class="btn btn__more" @click="getProducts">더보기 ({{ search.page }}/{{ search.totalPages }})</button>
-        </div>
+        <product-list :search="search" :products="products" @getMoreProducts="getProducts"></product-list>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import Product from '@/components/Product'
+import ProductList from '@/components/ProductList'
 
 export default {
-  name: 'home',
+  name: 'Main',
   components: {
-    Product
+    ProductList
   },
   data () {
     return {
+      originProducts: {
+        total: 0,
+        error: false,
+        list: []
+      },
       filters: {
         contractTypeAll: true,
         contractType: ['건축자금', '부동산담보'],
         typedStatusAll: true,
         typedStatus: ['대기중', '모집중']
-      },
-      originProducts: {
-        total: 0,
-        error: false,
-        list: []
       },
       search: {
         total: 0,
@@ -89,11 +83,13 @@ export default {
   },
   methods: {
     getOriginProducts () {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         this.$axios.get(this.jsonURL).then(result => {
           // origin products data init
           this.originProducts = result.data
           return resolve()
+        }).catch(e => {
+          throw e
         })
       })
     },
@@ -164,9 +160,8 @@ export default {
       this.getSearch()
     }
   },
-  async created () {
-    await this.getOriginProducts()
-    this.getSearch()
+  created () {
+    this.getOriginProducts().then(this.getSearch)
   }
 }
 </script>
@@ -204,22 +199,4 @@ export default {
 }
 
 .product-wrap { padding: 60px 0; }
-.product-result {
-  font-size: 16px;
-
-  em { color: $primary; }
-}
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 60px -12.5px;
-  width: calc(100% + 25px);
-}
-
-.product-btn-more {
-  display: flex;
-  justify-content: center;
-
-  .btn__more { width: 350px; }
-}
 </style>
