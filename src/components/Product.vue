@@ -1,39 +1,66 @@
 <template>
   <li class="product">
     <div class="product__image">
-      <img src="//placehold.it/500x500" alt="">
+      <img :src="_product.url" :alt="_product.title">
     </div>
     <div class="product-progress">
-      <div class="progress__bar"></div>
-      <div class="progress__value">50% 달성</div>
+      <div class="progress__bar" :style="{'width': `${_product.currentRate}%`}"></div>
+      <div class="progress__value"
+        v-if="_product.currentRate > 0"
+        :class="{'overvalue': _product.currentRate > 80}"
+        :style="{'left': `${_product.currentRate}%`}"
+      >
+        {{ _product.currentRate }}% 달성
+      </div>
     </div>
     <div class="product-contents">
       <div class="product-contract-type">
-        <div class="contract__type">부동산담보</div>
+        <div class="contract__type">{{ _product.contractType }}</div>
       </div>
       <div class="product-details">
-        <div class="product__rate">16%</div>
+        <div class="product__rate">{{ `${_product.rateOfReturn}%` }}</div>
         <div class="bar--vertical"></div>
-        <div class="product__period">13개월</div>
+        <div class="product__period">{{ `${_product.loanPeriod}개월` }}</div>
         <div class="bar--vertical"></div>
-        <div class="product__grade">B2</div>
+        <div class="product__grade">{{ _product.grade }}</div>
         <div class="bar--vertical"></div>
-        <div class="product__amount">3.7억</div>
+        <div class="product__amount">{{ _product.targetAmount | amountFilter }}</div>
       </div>
-      <div class="product__title">제3053차 성남 삼평동 봇들마을이지더원2단지아파트 담보상품</div>
+      <div class="product__title">{{ _product.title }}</div>
       <div class="product-button">
         <a href="#" class="btn btn--primary-outline">상세보기</a>
-        <a href="#" class="btn btn--primary">바로투자</a>
+        <template v-if="_product.typedStatus === '대기중'">
+          <a href="#" class="btn disabled">오픈예정</a>
+        </template>
+        <template v-else>
+          <a href="#" class="btn btn--primary">바로투자</a>
+        </template>
       </div>
     </div>
-    <div class="product__soldout">마감임박</div>
+    <div class="product__soldout" v-if="_product.soldOutSoon === 'TRUE'">마감임박</div>
   </li>
 </template>
 
 <script>
 export default {
   name: 'Product',
-  props: {}
+  filters: {
+    amountFilter (value) {
+      return `${(value / 100000000).toFixed(1)}억`
+    }
+  },
+  props: {
+    product: {
+      type: Object,
+      required: true,
+      default: () => ({})
+    }
+  },
+  computed: {
+    _product () {
+      return { ...this.product }
+    }
+  }
 }
 </script>
 
@@ -67,7 +94,7 @@ export default {
   .progress__value {
     position: absolute;
     top: -29px;
-    left: 50%;
+    left: 0;
     padding: 0 6px;
     height: 24px;
     line-height: 24px;
@@ -75,8 +102,10 @@ export default {
     text-align: center;
     color: #fff;
     font-size: 12px;
+    white-space: nowrap;
     background-color: $primary;
 
+    &.overvalue { transform: translateX(-100%); }
   }
 }
 .product-contents {
@@ -120,6 +149,7 @@ export default {
     }
   }
   .product__title {
+    height: 48px;
     font-size: 16px;
     line-height: 1.5;
   }
