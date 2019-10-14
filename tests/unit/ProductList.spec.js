@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import ProductList from '@/components/ProductList.vue'
 import Product from '@/components/Product.vue'
 
@@ -18,24 +18,45 @@ const product = {
 }
 
 describe('ProductList.vue', () => {
-  let wrapper = shallowMount(ProductList, {
-    propsData: {
-      search: {
-        total: 0,
-        page: 0,
-        totalPages: 0,
-        count: 5,
-        list: []
-      },
-      products: [{ ...product }, { ...product }, { ...product }, { ...product }, { ...product }]
-    }
+  let wrapper = null
+
+  beforeEach(() => {
+    wrapper = mount(ProductList, {
+      propsData: {
+        search: {
+          total: 10,
+          page: 1,
+          totalPages: 2,
+          count: 5,
+          list: [{ ...product }, { ...product }, { ...product }, { ...product }, { ...product }, { ...product }, { ...product }, { ...product }, { ...product }, { ...product }]
+        },
+        products: [{ ...product }, { ...product }, { ...product }, { ...product }, { ...product }]
+      }
+    })
   })
 
-  it('ProductList 컴포넌트', () => {
-    expect(wrapper.is(ProductList)).toBe(true)
+  describe('# Created', () => {
+    it('ProductList 컴포넌트', () => {
+      expect(wrapper.is(ProductList)).toBe(true)
+    })
   })
 
-  it('ProductList 기본 렌더링 시 count만큼 그려진다', () => {
-    expect(wrapper.findAll(Product).length).toBe(wrapper.vm.search.count)
+  describe('# UI', () => {
+    it('ProductList 기본 렌더링 시 count만큼 Product가 그려진다', () => {
+      expect(wrapper.findAll(Product).length).toBe(wrapper.vm.search.count)
+    })
+  })
+
+  describe('# Data', () => {
+  })
+
+  describe('# Event', () => {
+    // FIXME: emit?
+    /* it('더보기 버튼 클릭시, count만큼 Product가 늘어난다', () => {
+      expect(wrapper.vm.products.length).toBe(wrapper.vm.search.count)
+      const button = wrapper.find('.btn__more')
+      button.trigger('click')
+      expect(wrapper.vm.products.length).toBe(wrapper.vm.search.count + wrapper.vm.search.count)
+    }) */
   })
 })

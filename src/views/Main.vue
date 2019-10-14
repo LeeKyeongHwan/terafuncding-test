@@ -127,7 +127,7 @@ export default {
     }
   },
   created () {
-    this.getOriginProducts().then(this.getSearch)
+    this.getOriginProducts().then(this.getSearch).catch(e => { throw e })
   }
 }
 </script>
